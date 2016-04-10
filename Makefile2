@@ -1,0 +1,42 @@
+SHELL := /bin/bash
+
+#_HOST = undefined
+
+SRC_DIR = /home/iceberg/Documents/MeepC++/src
+OBJ_DIR = /home/iceberg/Documents/MeepC++/obj
+EXEC_DIR = /home/iceberg/Documents/MeepC++/bin
+INC_DIR = /home/iceberg/Documents/MeepC++/include
+LIB_DIR = /home/iceberg/Documents/MeepC++/lib
+
+SRC_MAIN = angle_resolved__general_grating.cpp
+SRC_AUX1 = meep_control_support0.cpp
+OBJ_AUX1 = meep_control_support0.o
+SRC_AUX2 = meep_geom_support0.cpp
+OBJ_AUX2 = meep_geom_support0.o
+SRC_AUX3 = meep_detector_tools3.5.cpp
+OBJ_AUX3 = meep_detector_tools3.5.o
+OBJ_MAIN = angle_resolved__general_grating.o
+EXEC = angle_resolved__general_grating.x
+
+CPP = mpicxx
+CPPFLAGS = -O3 -malign-double -openmp -g
+
+SYS_INC_DIR = /usr/include
+SYS_LIB_DIR = /usr/lib
+ATLAS_LIB_DIR = /usr/lib/atlas-base
+
+INC_FLAGS = -I$(SYS_INC_DIR) -I$(INC_DIR)
+LIB_FLAGS = -L$(SYS_LIB_DIR) -L$(LIB_DIR) -L$(ATLAS_LIB_DIR)
+LINK_FLAGS = -lfftw3 -lmeep_mpi-default -lhdf5 -lz -lgsl -lharminv -lfftw3_mpi -llapack -lcblas -latlas -lm		
+
+$(EXEC_DIR)/$(EXEC): $(OBJ_DIR)/$(OBJ_MAIN) $(OBJ_DIR)/$(OBJ_AUX1) $(OBJ_DIR)/$(OBJ_AUX2) $(OBJ_DIR)/$(OBJ_AUX3)
+	$(CPP) $(CPPFLAGS) $(INC_FLAGS) $(LIB_FLAGS) $(OBJ_DIR)/$(OBJ_MAIN) $(OBJ_DIR)/$(OBJ_AUX1) $(OBJ_DIR)/$(OBJ_AUX2) $(OBJ_DIR)/$(OBJ_AUX3) -o $(EXEC_DIR)/$(EXEC) $(LINK_FLAGS) 
+$(OBJ_DIR)/$(OBJ_MAIN): $(SRC_DIR)/$(SRC_MAIN)
+	$(CPP) $(CPPFLAGS) $(INC_FLAGS) -c $(SRC_DIR)/$(SRC_MAIN) -o $(OBJ_DIR)/$(OBJ_MAIN)
+$(OBJ_DIR)/$(OBJ_AUX1): $(SRC_DIR)/$(SRC_AUX1)
+	$(CPP) $(CPPFLAGS) $(INC_FLAGS) -c $(SRC_DIR)/$(SRC_AUX1) -o $(OBJ_DIR)/$(OBJ_AUX1)
+$(OBJ_DIR)/$(OBJ_AUX2): $(SRC_DIR)/$(SRC_AUX2)
+	$(CPP) $(CPPFLAGS) $(INC_FLAGS) -c $(SRC_DIR)/$(SRC_AUX2) -o $(OBJ_DIR)/$(OBJ_AUX2)
+$(OBJ_DIR)/$(OBJ_AUX3): $(SRC_DIR)/$(SRC_AUX3)
+	$(CPP) $(CPPFLAGS) $(INC_FLAGS) -c $(SRC_DIR)/$(SRC_AUX3) -o $(OBJ_DIR)/$(OBJ_AUX3)
+
